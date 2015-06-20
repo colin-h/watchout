@@ -8,6 +8,11 @@ Feel free to use it if you like. */
   opacity: 0.4;
 }
 */
+svg {
+  margin: 0 auto;
+  text-align: center;
+  border: 10px solid #F38187;
+}
 
 .scoreboard {
   border: 10px solid #F38187;
@@ -31,4 +36,12 @@ Feel free to use it if you like. */
 
 .enemy {
   fill: #F38187;
+}
+
+
+.message {
+  top: 400px;
+  left: 500px;
+  font-family: "Lobster Two";
+  font-size: 50px;
 }
