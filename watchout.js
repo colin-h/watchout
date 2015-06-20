@@ -1,4 +1,10 @@
 // start slingin' some d3 here.
+ //  _              _
+ // | |__     ___  | |  _ __     ___   _ __   ___
+ // | '_ \   / _ \ | | | '_ \   / _ \ | '__| / __|
+ // | | | | |  __/ | | | |_) | |  __/ | |    \__ \
+ // |_| |_|  \___| |_| | .__/   \___| |_|    |___/
+ //                    |_|
 
 //create svg element
 var svg = d3.select("body")
@@ -6,9 +12,11 @@ var svg = d3.select("body")
             .attr("width", 1600) //1600
             .attr("height", 800); //800
 
+//DATA
+var enemyData = [50, 100, 150, 200, 250, 300, 350, 400, 500, 700, 950,1200],
+    playerData = [{x:400, y:500, color:'#2F3640'}];
 
-var circlePositionData = [50, 100 /*150, 200, 250, 300, 350, 400, 500, 700, 950,1200*/]
-
+//Drag Method
 var drag = d3.behavior.drag()
              .on("dragstart", function(){ player.attr("fill", "#6D7D94"); })
              .on("drag", function() { d3.select(".player")
@@ -21,9 +29,15 @@ var generatePosition = function() {
   return pos
 }
 
-// creates enemy circles
+var calcDist = function(x2,x1,y2,y1){
+  return Math.sqrt( Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2))
+}
+
+// ---------------------------------------------------------------------------------
+
+// Creates Enemies
 var enemies = svg.selectAll(".enemy")
-  .data(circlePositionData)
+  .data(enemyData)
   .enter()
   .append("circle")
   .classed("enemy", true)
@@ -31,25 +45,8 @@ var enemies = svg.selectAll(".enemy")
   .attr("cy", 25)
   .attr("r", 15)
 
-
-// repeats movement animation
-setInterval(function() {
-  d3.selectAll(".enemy")
-  .transition()
-  .duration(1000)
-  .each(function() {
-    d3.select(this).transition()
-      .attr("cx", generatePosition())
-      .attr("cy", generatePosition())
-  });
-}, 800)
-
-
-
-//create player, give it draggable attribute
-var playerData = [{x:400, y:500, color:'#2F3640'}];
-
-var player = svg.selectAll("player")
+//Create Draggable Player
+var player = svg.selectAll(".player")
   .data(playerData)
   .enter()
   .append("circle")
@@ -60,33 +57,45 @@ var player = svg.selectAll("player")
   .attr("r", 20)
   .call(drag)
 
-var position = [playerData[0].x, playerData[0].y]
+// ---------------------------------------------------------------------------------
 
-var calcDist = function(x1,y1,x2,y2){
-  return Math.sqrt( Math.pow((x2 - x1), 2) - Math.pow((y2 - y1), 2))
-}
+// ANIMATION
+setInterval(function() {
+  d3.selectAll(".enemy")
+  .transition()
+  .duration(1000)
+  .each(function() {
+    d3.select(this).transition()
+      .attr("cx", generatePosition())
+      .attr("cy", generatePosition())
+      // creat squares to test where dots have been
+      svg.append("rect").attr("width", 20).attr("height", 20).attr("fill", "blue")
+        .attr("x", d3.select(this).attr("cx"))
+        .attr("y", d3.select(this).attr("cy"))
+  });
+}, 800)
 
-// returns mouse coordinates at any moment
-// svg.on("mousemove",function(){var position = d3.mouse(this)})
-
-//detect collisions
-//setInterval every couple of ms
-  //run a function that checks each enemy attrs cx cy
-  //if the abs value of position of enemy - position of circle < radius of player,
-    //counts as collision
+//Detect Collisions
+//setInterval to constantly check distances
 setInterval(function() {
   d3.selectAll(".enemy")
   .each(function() {
     var thisEnemy = d3.select(this);
-    var distBetweenTwo =calcDist(thisEnemy.attr("cx"), player.attr("cx"), thisEnemy.attr("cy"), player.attr("cy"))
-    if (distBetweenTwo < 10) {
-      console.log(distBetweenTwo)
+    // check distances
+    var distBetweenTwo = calcDist(thisEnemy.attr("cx"), player.attr("cx"), thisEnemy.attr("cy"), player.attr("cy"))
+    //if dots hit
+    if (distBetweenTwo < 35) {
+      //counts as collision
+      debugger;
       //update scoreboard
-      //flash red
+      //flash svg
     }
 
   });
-},10)
+}, 20)
 
-// var currentPlayerXPosition = player.attr("cx")
-// var currentEnemyXPosition = d3.select(this).attr("cx")
+// var currentPlayerXPosition = player.attr("cx");
+// var currentEnemyXPosition = d3.select(this).attr("cx");
+
+// returns mouse coordinates at any moment
+// svg.on("mousemove",function(){var position = d3.mouse(this)});
