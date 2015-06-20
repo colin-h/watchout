@@ -3,3 +3,32 @@
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 
+/*.scoreboard {
+  background-color: gray;
+  opacity: 0.4;
+}
+*/
+
+.scoreboard {
+  border: 10px solid #F38187;
+}
+
+.high, .current, .collisions {
+  font-family: "Lobster Two", serif;
+  font-size: 1.4em;
+  text-align: center;
+  background-color: #2F3640;
+  color: #EDEBE6;
+}
+
+.high span {
+  font-family: "Open Sans";
+}
+
+.player {
+
+}
+
+.enemy {
+  fill: #F38187;
+}
